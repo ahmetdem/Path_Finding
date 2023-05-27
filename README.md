@@ -1,2 +1,2 @@
-# path_finding
- a path finding demo i will be working on
+# Path Finding
+A path finding demo i will be working on.
