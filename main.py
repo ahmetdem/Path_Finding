@@ -1,9 +1,11 @@
 import pygame, random
 from button import Button
+from path import A_star
+import time
 
 # Define grid dimensions
-ROWS = 20
-COLS = 20
+ROWS = 25   
+COLS = 25
 
 GRID_WIDTH = 800
 BUTTON_WIDTH = 200
@@ -30,24 +32,51 @@ def clear_grid():
     global grid
     grid = [[0] * COLS for _ in range(ROWS)]
 
-def start_pathfinding():
-    print('starting pathfinding')
 
 def randomize_grid():
     """
-    Randomly fills the grid with 0s and 1s (0 = empty, 1 = wall), with a 20% chance of a cell being a wall
+    Randomly fills the grid with 0s and 1s (0 = empty, 1 = wall), with a 10% chance of a cell being a wall
     """
-    
     global grid
+
     for row in range(ROWS):
         for col in range(COLS):
             if random.random() < 0.10:
                 grid[row][col] = 1
             else:
                 grid[row][col] = 0
+    
+    # put random red grids
+    grid[random.randint(1,ROWS-1)][random.randint(1,ROWS-1)] = 2
+    grid[random.randint(1,ROWS-1)][random.randint(1,ROWS-1)] = 2
+    
 
-    grid[0][ROWS - 1] = 2
-    grid[ROWS - 1][0] = 2
+def start_pathfinding():
+    global grid
+    red_grids = []
+
+    for row in range(ROWS):
+        for col in range(COLS):
+            if grid[row][col] == 2:
+                red_grids.append((row, col))
+
+    if red_grids == []:
+        red_grids = [(0, ROWS - 1), (COLS - 1, 0)]
+
+    start = time.time()
+    path = A_star(red_grids[0], red_grids[1], grid)
+    end = time.time()
+
+    taken = end - start
+    taken = taken.__round__(3)
+    print(f'Time taken: {taken}')
+
+    if path is None:
+        return print('No path found')
+
+    for node in path:
+        grid[node[0]][node[1]] = 2
+  
 
 # Create buttons
 but = Button(
