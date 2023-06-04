@@ -1,8 +1,9 @@
-import pygame
+import pygame, random
 from button import Button
+
 # Define grid dimensions
-ROWS = 10
-COLS = 10
+ROWS = 20
+COLS = 20
 
 GRID_WIDTH = 800
 BUTTON_WIDTH = 200
@@ -29,6 +30,26 @@ def clear_grid():
     global grid
     grid = [[0] * COLS for _ in range(ROWS)]
 
+def start_pathfinding():
+    print('starting pathfinding')
+
+def randomize_grid():
+    """
+    Randomly fills the grid with 0s and 1s (0 = empty, 1 = wall), with a 20% chance of a cell being a wall
+    """
+    
+    global grid
+    for row in range(ROWS):
+        for col in range(COLS):
+            if random.random() < 0.10:
+                grid[row][col] = 1
+            else:
+                grid[row][col] = 0
+
+    grid[0][ROWS - 1] = 2
+    grid[ROWS - 1][0] = 2
+
+# Create buttons
 but = Button(
     window,
     x = GRID_WIDTH + 35,
@@ -39,7 +60,6 @@ but = Button(
     onclickFunction= clear_grid,
     onePress=True
 )
-
 but2 = Button(
     window,
     x= GRID_WIDTH + 35,
@@ -47,7 +67,17 @@ but2 = Button(
     width = BUTTON_WIDTH - 70,
     height = 110,
     buttonText='Start',
-    onclickFunction= None,
+    onclickFunction= start_pathfinding,
+    onePress=True
+)
+but3 = Button(
+    window,
+    x= GRID_WIDTH + 35,
+    y= 350,
+    width = BUTTON_WIDTH - 70,
+    height = 110,
+    buttonText='Random',
+    onclickFunction= randomize_grid,
     onePress=True
 )
 
@@ -75,8 +105,10 @@ while running:
             pygame.draw.rect(window, cell_color, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
             pygame.draw.rect(window, GRAY, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
 
+        
     but.process()
     but2.process()
+    but3.process()
 
     try:
         if pygame.mouse.get_pressed()[0]:
@@ -97,9 +129,12 @@ while running:
             col = pos[0] // CELL_SIZE
             row = pos[1] // CELL_SIZE
             grid[row][col] = 2
+
     except:
         pass
 
+
+    
     # Update the screen
     pygame.display.flip()
     clock.tick(60)
