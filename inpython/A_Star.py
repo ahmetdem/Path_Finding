@@ -1,4 +1,3 @@
-
 def h(n, goal):
     """
     Calculates the heuristic value for the A* algorithm
@@ -19,7 +18,7 @@ def reconstruct_path(came_from, current):
     return total_path
 
 
-def get_neighbors(node, grid, ROWS=25, COLS=25):
+def get_neighbors(node, grid, ROWS=200, COLS=200):
     """
     Returns a list of neighbors of the node
     """
@@ -60,7 +59,7 @@ def A_star(start, goal, grid, heuristic=h):
 
         for neighbor in get_neighbors(current, grid):
             tentative_g_score = g_score[current] + 1
-
+            
             if tentative_g_score < g_score.get(neighbor, float('inf')):
                 came_from[neighbor] = current
                 g_score[neighbor] = tentative_g_score
@@ -70,3 +69,4 @@ def A_star(start, goal, grid, heuristic=h):
                 if neighbor not in open_set:
                     open_set.add(neighbor)
         
+

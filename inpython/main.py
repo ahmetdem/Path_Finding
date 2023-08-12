@@ -4,8 +4,8 @@ from path import A_star
 import time
 
 # Define grid dimensions
-ROWS = 25   
-COLS = 25
+ROWS = 200
+COLS = 200
 
 GRID_WIDTH = 800
 BUTTON_WIDTH = 200
@@ -41,18 +41,18 @@ def randomize_grid():
 
     for row in range(ROWS):
         for col in range(COLS):
-            if random.random() < 0.10:
+            if random.random() < 0.20:
                 grid[row][col] = 1
             else:
                 grid[row][col] = 0
-    
-    # put random red grids
-    grid[random.randint(1,ROWS-1)][random.randint(1,ROWS-1)] = 2
-    grid[random.randint(1,ROWS-1)][random.randint(1,ROWS-1)] = 2
+
     
 
 def start_pathfinding():
     global grid
+
+
+
     red_grids = []
 
     for row in range(ROWS):
@@ -63,12 +63,14 @@ def start_pathfinding():
     if red_grids == []:
         red_grids = [(0, ROWS - 1), (COLS - 1, 0)]
 
+
+
     start = time.time()
     path = A_star(red_grids[0], red_grids[1], grid)
     end = time.time()
 
     taken = end - start
-    taken = taken.__round__(3)
+    taken = taken.__round__(5)
     print(f'Time taken: {taken}')
 
     if path is None:
@@ -76,7 +78,9 @@ def start_pathfinding():
 
     for node in path:
         grid[node[0]][node[1]] = 2
-  
+
+    print(len(path))
+
 
 # Create buttons
 but = Button(
