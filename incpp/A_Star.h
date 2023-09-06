@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <chrono>
 #include "random.h"
+#include "constants.h"
 
 class Timer
 {
@@ -66,7 +67,7 @@ std::vector<Node> reconstruct_path(std::unordered_map<Node, Node>& came_from, No
 }
 
 
-std::vector<Node> get_neighbors(Node node, std::vector<std::vector<int>>& grid, int ROWS = 200, int COLS = 200) {
+std::vector<Node> get_neighbors(Node node, std::vector<std::vector<int>>& grid, int grid_size) {
 
     std::vector<Node> neighbors;
 
@@ -74,13 +75,13 @@ std::vector<Node> get_neighbors(Node node, std::vector<std::vector<int>>& grid, 
     if (node.x > 0 && grid[node.x - 1][node.y] != 1) {
         neighbors.push_back({node.x - 1, node.y});
     }
-    if (node.x < ROWS - 1 && grid[node.x + 1][node.y] != 1) {
+    if (node.x < grid_size - 1 && grid[node.x + 1][node.y] != 1) {
         neighbors.push_back({node.x + 1, node.y});
     }
     if (node.y > 0 && grid[node.x][node.y - 1] != 1) {
         neighbors.push_back({node.x, node.y - 1});
     }
-    if (node.y < COLS - 1 && grid[node.x][node.y + 1] != 1) {
+    if (node.y < grid_size - 1 && grid[node.x][node.y + 1] != 1) {
         neighbors.push_back({node.x, node.y + 1});
     }
 
@@ -112,7 +113,7 @@ std::vector<Node> A_star(Node start, Node goal, std::vector<std::vector<int>>& g
         open_set.erase(current);
 
 
-        for (Node neighbor : get_neighbors(current, grid)) {
+        for (Node neighbor : get_neighbors(current, grid, GRID_SIZE)) {
             int tentative_g_score = g_score[current] + 1;
 
             if (g_score.find(neighbor) == g_score.end() || tentative_g_score < g_score[neighbor]) {
@@ -128,9 +129,9 @@ std::vector<Node> A_star(Node start, Node goal, std::vector<std::vector<int>>& g
     return std::vector<Node>(); // No path found
 }
 
-std::vector<std::vector<int>> randomize_grid(int rows, int cols, int obstacle_percentage)
+std::vector<std::vector<int>> randomize_grid(int GRID_SIZE, int obstacle_percentage)
 {
-    std::vector<std::vector<int>> grid(rows, std::vector<int>(cols, 0));
+    std::vector<std::vector<int>> grid(GRID_SIZE, std::vector<int>(GRID_SIZE, 0));
 
     // Set obstacles
     for (auto &&row : grid)
@@ -143,25 +144,8 @@ std::vector<std::vector<int>> randomize_grid(int rows, int cols, int obstacle_pe
         }
     }
 
-    return grid;
-}
-
-int main() {
-
-    Node start = {0, 0};  // Starting node at position (0, 0)
-    Node goal = {199, 199};   // Goal node at position (9, 9)
-
-
-    std::vector<std::vector<int>> grid { randomize_grid(200, 200, 20) };
+    grid[0][0] = 0;
+    grid[GRID_SIZE - 1][GRID_SIZE - 1] = 0;
     
-    Timer T;
-    std::vector<Node> path = A_star(start, goal, grid);
-    std::cout << "Time elapsed in full program: " << T.elapsed() << " seconds" << std::endl;
-
-    if (path.empty()) {
-        std::cout << "No path found." << std::endl;
-    }
-
-
-    return 0;
+    return grid;
 }
