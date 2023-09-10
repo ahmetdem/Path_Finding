@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "constants.h"
 
-const int GRID_SIZE = 100;
+const int GRID_SIZE = 200;
 const int CELL_SIZE = 800 / GRID_SIZE;
 
 

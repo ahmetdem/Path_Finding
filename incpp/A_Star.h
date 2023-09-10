@@ -17,7 +17,6 @@ private:
     std::chrono::time_point<Clock> m_beg{ Clock::now() };
 
 public:
-
     void reset()
     {
         m_beg = Clock::now();
@@ -70,8 +69,7 @@ std::vector<Node> reconstruct_path(std::unordered_map<Node, Node>& came_from, No
 std::vector<Node> get_neighbors(Node node, std::vector<std::vector<int>>& grid, int grid_size) {
 
     std::vector<Node> neighbors;
-
-
+    
     if (node.x > 0 && grid[node.x - 1][node.y] != 1) {
         neighbors.push_back({node.x - 1, node.y});
     }
