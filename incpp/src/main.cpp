@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "A_Star.h"
+#include "../include/A_Star.h"
 #include <SFML/Graphics.hpp>
 #include "constants.h"
 
